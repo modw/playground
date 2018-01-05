@@ -59,7 +59,6 @@ def get_artist_info(url):
     for link in info_links:
         link_url = link['href']
         if re.search('instagram', link_url):
-            print(link_url)
             # splitting by '/'
             link_url_list = link_url.split('/')
             # removing empty elements
