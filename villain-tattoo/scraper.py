@@ -1,7 +1,7 @@
 #%%
 import time
-import requests
 import re
+import requests
 from bs4 import BeautifulSoup as bs
 
 
@@ -9,7 +9,12 @@ from bs4 import BeautifulSoup as bs
 
 
 def get_artists_urls(url):
-    '''get artists url list from convention url'''
+    '''get artists url list from convention url
+    - pars -
+    url: string; address to page with list of artists for a specific convention
+    - returns -
+    artists_urls: list of strings; links to each artist page in villainarts website
+    '''
     time.sleep(1)
     response = requests.get(url)
     html = response.text
@@ -32,7 +37,13 @@ def get_artists_urls(url):
 
 
 def get_artist_info(url):
-    '''get artists name and instagram from artist url'''
+    '''get artists name and instagram from artist url
+    - pars -
+    url: string, address to page artist page on villainarts domain
+    - returns -
+    name, insta: str, list of str; artist name and list of artist instagram page
+    (usually personal page and studio page)
+    '''
     time.sleep(1)
     response = requests.get(url)
     html = response.text
@@ -61,7 +72,11 @@ def get_artist_info(url):
 #%% get number of instagram followers from instagram name
 
 def get_total_followers(insta_name):
-    '''get number of followers (float) from instagram username from profile webpage'''
+    '''get number of followers (float) from instagram username from profile webpage
+    - pars -
+    insta_name: str; instagram username
+    - returns -
+    n_followers: float; number of instagram followers'''
     url = "https://www.instagram.com/" + insta_name
     time.sleep(1)
     response = requests.get(url)
@@ -74,25 +89,3 @@ def get_total_followers(insta_name):
     n_followers = descr.split()[0]
     n_followers = float(''.join(n_followers.split(",")))
     return n_followers
-
-#%% looping over every artist of convention and getting instagram
-
-
-CONV_CLE_URL = "http://www.villainarts.com/tattoo-conventions-villain-arts/\
-cleveland-tattoo-arts-convention/artists-vendors-attending/"
-
-artists_links = get_artists_urls(CONV_CLE_URL)
-artists_info = []
-
-counter = 0  # to test
-for link in artists_links:
-    info = get_artist_info(link)
-    artists_info.append(info)
-    print(info)
-
-    counter += 1
-    if counter == 8:
-        print('')
-        print('-----------------')
-        print('')
-        break
