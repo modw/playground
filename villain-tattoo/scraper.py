@@ -83,24 +83,13 @@ def get_total_followers(insta_name):
     # parsing html
     soup = bs(html, 'html.parser')
     # getting n_followers
-    descr = soup.find('html').find(
-        'meta', property="og:description")['content']
-    n_followers = descr.split()[0]
-    # getting rid of commas
-    n_followers = ''.join(n_followers.split(","))
-    # dealing with thousands abbreviation for > 10k followers
-    if n_followers.__contains__('k'):
-        # exclude k
-        n_followers = n_followers[:-1]
-        # convert to float and multiply by a thousand
-        n_followers = float(n_followers) * 1e3
-
-    # dealing with millions abbreviation for 1mi followers
-    if n_followers.__contains__('m'):
-        # exclude m
-        n_followers = n_followers[:-1]
-        # convert to float and multiply by a million
-        n_followers = float(n_followers) * 1e6
-
-    # reinforce float below for the case there's not k but there's a comma
+    # relevant piece of text
+    insta_text = str(soup.find_all('script', type="text/javascript"))
+    # regex to find follower count piece
+    pattern = r"\"followed_by\": {\"count\":\s\d+"
+    insta_text_refined = re.search(pattern, insta_text).group()
+    # getting the numbers out of the text
+    pattern = r"\d+"
+    n_followers = re.search(pattern, insta_text_refined).group()
+    # ensuring they're floats and return
     return float(n_followers)
