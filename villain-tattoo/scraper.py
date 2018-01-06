@@ -87,7 +87,10 @@ def get_total_followers(insta_name):
     insta_text = str(soup.find_all('script', type="text/javascript"))
     # regex to find follower count piece
     pattern = r"\"followed_by\": {\"count\":\s\d+"
-    insta_text_refined = re.search(pattern, insta_text).group()
+    try:
+        insta_text_refined = re.search(pattern, insta_text).group()
+    except:
+        return None
     # getting the numbers out of the text
     pattern = r"\d+"
     n_followers = re.search(pattern, insta_text_refined).group()
